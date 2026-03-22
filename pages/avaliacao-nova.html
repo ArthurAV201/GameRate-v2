@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Nova Avaliação</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .wrap { flex: 1; max-width: 700px; margin: 0 auto; padding: 36px 24px; width: 100%; }
+    .page-title { font-size: 22px; font-weight: 700; margin-bottom: 28px; }
+    .game-search-result {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px; border: 1px solid var(--border); border-radius: 6px;
+      cursor: pointer; margin-bottom: 4px;
+    }
+    .game-search-result:hover { background: var(--surface2); }
+    .game-search-result img { width: 36px; height: 48px; border-radius: 4px; object-fit: cover; background: var(--surface2); }
+    .selected-game {
+      display: flex; gap: 12px; align-items: center;
+      padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); margin-bottom: 20px;
+    }
+    .selected-game img { width: 44px; height: 58px; border-radius: 4px; object-fit: cover; background: var(--surface2); }
+  </style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="../index.html" class="logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="search-wrap">
+    <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Pesquisar"/>
+  </div>
+  <nav class="nav-links">
+    <a href="./catalogo.html">Jogos</a>
+    <a href="./avaliacao-nova.html" class="auth-only nav-criar" style="display:none">Criar Análise</a>
+    <a href="./perfil.html" class="auth-only" style="display:none;flex-direction:column;align-items:flex-end;gap:0;line-height:1.2;">
+      <span class="nav-username" style="font-weight:600;font-size:13px"></span>
+      <span class="nav-userrole" style="font-size:11px"></span>
+    </a>
+    <a href="#" data-action="logout" class="auth-only" style="display:none">Sair</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="page-title">Criar Análise</div>
+
+  <div id="stepJogo">
+    <div class="form-group">
+      <label>Buscar jogo</label>
+      <input type="text" id="jogoSearch" placeholder="Digite o nome do jogo..."/>
+    </div>
+    <div id="jogoResults"></div>
+  </div>
+
+  <div id="stepAnalise" style="display:none">
+    <div class="selected-game" id="selectedGameBox"></div>
+
+    <div class="form-group">
+      <label>Nota</label>
+      <div class="nota-slider">
+        <input type="range" id="nota" min="1" max="5" step="0.5" value="4"/>
+        <div class="nota-val" id="notaVal">4</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Título da análise</label>
+      <input type="text" id="titulo" placeholder="Resumo da sua opinião"/>
+    </div>
+    <div class="form-group">
+      <label>Texto (mín. 40 caracteres)</label>
+      <textarea id="texto" rows="7" placeholder="Escreva sua análise detalhada..."></textarea>
+    </div>
+    <div id="errMsg" class="form-error" style="margin-bottom:12px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" id="btnPublicar">Publicar análise</button>
+      <button class="btn btn-ghost"   id="btnTrocar">← Trocar jogo</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <a href="../index.html" class="footer-logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links"><a href="./contato.html">Contato</a></div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                           from '../js/api.js';
+  import { isLoggedIn }                    from '../js/auth.js';
+  import { setupNav, logout, onDelegated, toast } from '../js/ui.js';
+
+  setupNav();
+  if (!isLoggedIn()) location.href = './login.html?next=./avaliacao-nova.html';
+  onDelegated('logout', (el, e) => { e.preventDefault(); logout(); });
+
+  document.getElementById('searchInput').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') location.href = `./catalogo.html?search=${e.target.value}`;
+  });
+
+  document.getElementById('nota').addEventListener('input', (e) => {
+    document.getElementById('notaVal').textContent = e.target.value;
+  });
+
+  let selectedGameId = null;
+
+  let searchTimeout;
+  document.getElementById('jogoSearch').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    const term = e.target.value.trim();
+    if (!term) { document.getElementById('jogoResults').innerHTML = ''; return; }
+    searchTimeout = setTimeout(async () => {
+      const data = await api.get(`/jogos?search=${encodeURIComponent(term)}&limit=5`);
+      document.getElementById('jogoResults').innerHTML = data.jogos.map(g => `
+        <div class="game-search-result" data-id="${g.id_jogo}" data-action="select-game">
+          <img src="${g.capa || ''}" alt="${g.nome_jogo}" onerror="this.style.background='var(--surface2)';this.removeAttribute('src')">
+          <div>
+            <div style="font-weight:600;font-size:14px">${g.nome_jogo}</div>
+            <div style="font-size:12px;color:var(--muted)">${new Date(g.data_lancamento).getFullYear()} · ${g.desenvolvedora}</div>
+          </div>
+        </div>`).join('') || '<div style="color:var(--muted);font-size:13px;padding:8px">Nenhum jogo encontrado.</div>';
+    }, 300);
+  });
+
+  onDelegated('select-game', async (el) => {
+    selectedGameId = parseInt(el.dataset.id);
+    const game = await api.get(`/jogos/${selectedGameId}`);
+    document.getElementById('selectedGameBox').innerHTML = `
+      ${game.capa ? `<img src="${game.capa}" alt="${game.nome_jogo}">` : ''}
+      <div>
+        <div style="font-weight:700;font-size:16px">${game.nome_jogo}</div>
+        <div style="font-size:13px;color:var(--muted)">${new Date(game.data_lancamento).getFullYear()} · ${game.desenvolvedora}</div>
+      </div>`;
+    document.getElementById('stepJogo').style.display    = 'none';
+    document.getElementById('stepAnalise').style.display = '';
+  });
+
+  document.getElementById('btnTrocar').addEventListener('click', () => {
+    selectedGameId = null;
+    document.getElementById('jogoSearch').value = '';
+    document.getElementById('jogoResults').innerHTML = '';
+    document.getElementById('stepJogo').style.display    = '';
+    document.getElementById('stepAnalise').style.display = 'none';
+  });
+
+  document.getElementById('btnPublicar').addEventListener('click', async () => {
+    const nota   = parseFloat(document.getElementById('nota').value);
+    const titulo = document.getElementById('titulo').value.trim();
+    const texto  = document.getElementById('texto').value.trim();
+    const errEl  = document.getElementById('errMsg');
+    errEl.textContent = '';
+    if (!selectedGameId)  { errEl.textContent = 'Selecione um jogo'; return; }
+    if (!titulo || !texto){ errEl.textContent = 'Preencha todos os campos'; return; }
+    if (texto.length < 40){ errEl.textContent = 'Texto muito curto (mín. 40 caracteres)'; return; }
+    const btn = document.getElementById('btnPublicar');
+    btn.textContent = 'Publicando...'; btn.disabled = true;
+    try {
+      const rev = await api.post('/avaliacoes', { id_jogo_fk: selectedGameId, nota, titulo, texto });
+      toast('Análise publicada!', 'success');
+      setTimeout(() => location.href = `./avaliacao.html?id=${rev.id_avaliacao}`, 1000);
+    } catch(e) {
+      errEl.textContent = e.message;
+      btn.textContent = 'Publicar análise'; btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

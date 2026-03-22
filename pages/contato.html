@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Contato</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .contato-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .form-card-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 24px; }
+
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    legend { font-size: 12px; color: var(--muted); padding: 0 6px; }
+    fieldset .form-group { margin-bottom: 12px; }
+    fieldset .form-group:last-child { margin-bottom: 0; }
+    fieldset .form-group label { font-size: 13px; margin-bottom: 4px; }
+    fieldset .form-group input { background: transparent; border: none; border-bottom: 1px solid var(--border); border-radius: 0; padding: 4px 0; }
+    fieldset .form-group input:focus { border-color: var(--text); }
+    .radio-row { display: flex; gap: 32px; padding: 4px 0; }
+    .radio-opt { display: flex; align-items: center; gap: 8px; font-size: 15px; cursor: pointer; }
+    .radio-opt input { width: 16px; height: 16px; accent-color: var(--text); cursor: pointer; }
+    textarea.msg-area {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      resize: vertical;
+      min-height: 160px;
+    }
+    textarea.msg-area::placeholder { color: var(--muted); }
+    textarea.msg-area:focus { border-color: #888; }
+    .success-box { text-align: center; padding: 24px; }
+    .success-box .icon { font-size: 40px; margin-bottom: 12px; }
+    .success-box p { color: var(--muted); margin-top: 8px; }
+  </style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="../index.html" class="logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="search-wrap" style="visibility:hidden"></div>
+  <nav class="nav-links">
+    <a href="./catalogo.html">Jogos</a>
+    <a href="./login.html" class="guest-only">Login</a>
+    <a href="./cadastro.html" class="guest-only btn-solid">Registrar</a>
+    <a href="./perfil.html"   class="auth-only" style="display:none"><span class="nav-username"></span></a>
+    <a href="#" data-action="logout" class="auth-only" style="display:none">Sair</a>
+  </nav>
+</header>
+
+<div class="contato-wrap">
+  <div class="form-card" id="formCard">
+    <div class="form-card-title">Relate sua dúvida ou erro</div>
+
+    <fieldset>
+      <legend>Dados</legend>
+      <div class="form-group"><label>Nome:</label><input type="text" id="nome" placeholder=" "/></div>
+      <div class="form-group"><label>Email:</label><input type="email" id="email" placeholder=" "/></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Selecione</legend>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="tipo" value="Dúvida" checked/> Dúvida</label>
+        <label class="radio-opt"><input type="radio" name="tipo" value="Erro"/>    Erro</label>
+        <label class="radio-opt"><input type="radio" name="tipo" value="Sugestão"/> Sugestão</label>
+        <label class="radio-opt"><input type="radio" name="tipo" value="Denúncia"/> Denúncia</label>
+      </div>
+    </fieldset>
+
+    <textarea class="msg-area" id="mensagem" placeholder="Escreva aqui..."></textarea>
+
+    <div id="errMsg" class="form-error" style="margin:10px 0"></div>
+    <div style="text-align:right;margin-top:16px">
+      <button class="btn btn-primary" id="btnEnviar">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <a href="../index.html" class="footer-logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links"><a href="./contato.html">Contato</a></div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                     from '../js/api.js';
+
+  setupNav();
+  onDelegated('logout', (el, e) => { e.preventDefault(); logout(); });
+
+  document.getElementById('btnEnviar').addEventListener('click', async () => {
+    const nome    = document.getElementById('nome').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const tipo    = document.querySelector('input[name="tipo"]:checked').value;
+    const mensagem= document.getElementById('mensagem').value.trim();
+    const errEl   = document.getElementById('errMsg');
+    errEl.textContent = '';
+
+    if (!email || !mensagem) { errEl.textContent = 'Preencha e-mail e mensagem'; return; }
+
+    const btn = document.getElementById('btnEnviar');
+    btn.textContent = 'Enviando...'; btn.disabled = true;
+
+    try {
+      await api.post('/contato', { email_contato: email, tipo, mensagem });
+      document.getElementById('formCard').innerHTML = `
+        <div class="success-box">
+          <div class="icon">✅</div>
+          <div style="font-size:18px;font-weight:700">Mensagem enviada!</div>
+          <p>Nossa equipe responderá no e-mail informado.</p>
+          <a href="../index.html" class="btn btn-ghost" style="margin-top:20px;display:inline-flex">← Voltar ao início</a>
+        </div>`;
+    } catch(e) {
+      errEl.textContent = e.message;
+      btn.textContent = 'Enviar'; btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Cadastro</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+  <style>
+    .radio-row { display: flex; gap: 28px; margin: 4px 0 18px; }
+    .radio-opt { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .radio-opt input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+  </style>
+</head>
+<body class="auth-page">
+
+<div class="auth-box">
+  <div class="auth-logo">
+    <a href="../index.html"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-card-title">CRIAR CONTA</div>
+    <div class="form-group">
+      <label>Nome de usuário</label>
+      <input type="text" id="usuario" placeholder="Ex: GamerPro123"/>
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="senha" placeholder="Mínimo 6 caracteres"/>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de conta</label>
+      <div class="radio-row">
+        <label class="radio-opt">
+          <input type="radio" name="perfil" value="Jogador" checked/>
+          <span style="color:var(--jogador)">Jogador</span>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="perfil" value="Crítico Especializado"/>
+          <span style="color:var(--critico)">Crítico</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="errMsg" class="form-error" style="margin-bottom:12px"></div>
+    <button class="btn btn-accent btn-full" id="btnCadastro">Criar Conta</button>
+  </div>
+
+  <div class="auth-footer">
+    Já tem conta? <a href="./login.html">Entrar</a> · <a href="../index.html">← Home</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <a href="../index.html" class="footer-logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links"><a href="./contato.html">Contato</a></div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                     from '../js/api.js';
+  import { saveSession, isLoggedIn } from '../js/auth.js';
+
+  if (isLoggedIn()) location.href = '../index.html';
+
+  const errEl = document.getElementById('errMsg');
+  const btnEl = document.getElementById('btnCadastro');
+
+  btnEl.addEventListener('click', async () => {
+    const nome_usuario    = document.getElementById('usuario').value.trim();
+    const email           = document.getElementById('email').value.trim();
+    const senha           = document.getElementById('senha').value;
+    const perfil_escolhido= document.querySelector('input[name="perfil"]:checked').value;
+    errEl.textContent = '';
+
+    if (!nome_usuario || !email || !senha) { errEl.textContent = 'Preencha todos os campos'; return; }
+    if (senha.length < 6) { errEl.textContent = 'Senha deve ter no mínimo 6 caracteres'; return; }
+
+    btnEl.textContent = 'Criando...'; btnEl.disabled = true;
+    try {
+      const data = await api.post('/auth/cadastro', { nome_usuario, email, senha, perfil_escolhido });
+      saveSession(data.token, data.nome, data.perfil, data.id);
+      location.href = '../index.html';
+    } catch(e) {
+      errEl.textContent = e.message;
+      btnEl.textContent = 'Criar Conta'; btnEl.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

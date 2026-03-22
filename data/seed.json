@@ -1,0 +1,142 @@
+{
+  "games": [
+    {
+      "id_jogo": 1,
+      "nome_jogo": "Elden Ring",
+      "desenvolvedora": "FromSoftware",
+      "data_lancamento": "2022-02-25",
+      "descricao": "Um RPG de ação ambientado nas Terras Intermédias, criado em colaboração com George R.R. Martin. Explore um vasto mundo aberto repleto de masmorras, chefes e segredos.",
+      "nota_media": 4.8,
+      "total_avaliacoes": 2,
+      "capa": "assets/eldenring.jpg",
+      "generos": ["Ação", "RPG"],
+      "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
+    },
+    {
+      "id_jogo": 2,
+      "nome_jogo": "God of War Ragnarök",
+      "desenvolvedora": "Santa Monica Studio",
+      "data_lancamento": "2022-11-09",
+      "descricao": "Kratos e Atreus embarcam em uma épica jornada pelos reinos nórdicos enquanto o Ragnarök se aproxima. Uma sequência que supera o original em emoção e escala.",
+      "nota_media": 4.8,
+      "total_avaliacoes": 2,
+      "capa": "assets/gowragnarok.jpg",
+      "generos": ["Ação", "Aventura"],
+      "plataformas": ["PC", "PlayStation 5", "PlayStation 4"]
+    },
+    {
+      "id_jogo": 3,
+      "nome_jogo": "Baldur's Gate 3",
+      "desenvolvedora": "Larian Studios",
+      "data_lancamento": "2023-08-03",
+      "descricao": "O mais completo RPG de mesa digital já criado. Com roteiro ramificado, personagens profundos e combate tático, define um novo padrão para o gênero.",
+      "nota_media": 5.0,
+      "total_avaliacoes": 1,
+      "capa": "assets/baldursgate3.jpg",
+      "generos": ["RPG", "Aventura"],
+      "plataformas": ["PC", "PlayStation 5"]
+    },
+    {
+      "id_jogo": 4,
+      "nome_jogo": "Cyberpunk 2077",
+      "desenvolvedora": "CD Projekt RED",
+      "data_lancamento": "2020-12-10",
+      "descricao": "Uma epopeia cyberpunk em Night City, uma megalópole obcecada por poder e modificações corporais. Jogue como V em uma história de redenção e identidade.",
+      "nota_media": 4.0,
+      "total_avaliacoes": 1,
+      "capa": "assets/cyberpunk2077.jpg",
+      "generos": ["RPG", "Ação"],
+      "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
+    },
+    {
+      "id_jogo": 5,
+      "nome_jogo": "Hollow Knight",
+      "desenvolvedora": "Team Cherry",
+      "data_lancamento": "2017-02-24",
+      "descricao": "Um metroidvania desafiador e belíssimo ambientado em Hallownest, um reino subterrâneo de insetos. Arte manual, trilha sonora magistral e gameplay impecável.",
+      "nota_media": 4.7,
+      "total_avaliacoes": 1,
+      "capa": "assets/hollowknight.jpg",
+      "generos": ["Ação", "Aventura"],
+      "plataformas": ["PC", "Nintendo Switch"]
+    },
+    {
+      "id_jogo": 6,
+      "nome_jogo": "Red Dead Redemption 2",
+      "desenvolvedora": "Rockstar Games",
+      "data_lancamento": "2018-10-26",
+      "descricao": "Uma obra-prima ambientada no Velho Oeste americano. Arthur Morgan e o bando Van der Linde enfrentam o fim de uma era em uma das histórias mais emocionantes dos jogos.",
+      "nota_media": 5.0,
+      "total_avaliacoes": 1,
+      "capa": "assets/reddeadredemption2.jpg",
+      "generos": ["Aventura", "Ação"],
+      "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
+    },
+    {
+      "id_jogo": 7,
+      "nome_jogo": "Hades",
+      "desenvolvedora": "Supergiant Games",
+      "data_lancamento": "2020-09-17",
+      "descricao": "Um roguelike de ação sobre Zagreus, filho de Hades, tentando escapar do submundo grego. Narrativa integrada ao gameplay de forma nunca vista no gênero.",
+      "nota_media": 4.5,
+      "total_avaliacoes": 1,
+      "capa": "assets/hades.jpg",
+      "generos": ["Ação", "RPG"],
+      "plataformas": ["PC", "PlayStation 5", "Nintendo Switch"]
+    },
+    {
+      "id_jogo": 8,
+      "nome_jogo": "The Witcher 3: Wild Hunt",
+      "desenvolvedora": "CD Projekt RED",
+      "data_lancamento": "2015-05-19",
+      "descricao": "Geralt de Rívia em sua aventura mais épica, buscando sua filha adotiva Ciri. Um dos maiores RPGs de mundo aberto já criados, com quests memoráveis.",
+      "nota_media": 4.9,
+      "total_avaliacoes": 1,
+      "capa": "assets/thewitcher3.jpg",
+      "generos": ["RPG", "Aventura"],
+      "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One", "Nintendo Switch"]
+    }
+  ],
+  "users": [
+    { "id_usuario": 1, "nome_usuario": "CriticoMaster", "email": "critico@gamerate.com",  "senha": "senha123", "nome_perfil": "Crítico Especializado", "data_criacao": "2024-02-10" },
+    { "id_usuario": 2, "nome_usuario": "GamerFox",      "email": "gamer@gamerate.com",    "senha": "senha123", "nome_perfil": "Jogador",               "data_criacao": "2024-03-05" },
+    { "id_usuario": 3, "nome_usuario": "ZeldaFan99",    "email": "zelda@gamerate.com",    "senha": "senha123", "nome_perfil": "Jogador",               "data_criacao": "2024-04-20" },
+    { "id_usuario": 4, "nome_usuario": "Admin",         "email": "admin@gamerate.com",    "senha": "admin123", "nome_perfil": "Administrador",         "data_criacao": "2024-01-01" }
+  ],
+  "reviews": [
+    { "id_avaliacao": 1, "id_usuario_fk": 1, "id_jogo_fk": 1, "nota": 5.0, "titulo": "Uma obra-prima sem igual na história dos jogos", "texto": "Elden Ring redefine o que um RPG de ação pode ser. A colaboração de Miyazaki com George R.R. Martin resultou em um lore denso e misterioso que convida à exploração constante. Cada canto do mapa esconde uma surpresa — seja um chefe escondido, um dungeon subterrâneo ou um fragmento de história que expande o universo de formas inesperadas.\n\nO combate é brutal e recompensador. Cada encontro exige paciência, leitura de padrões e adaptação. Quando você finalmente derrota um chefe que te matou dezenas de vezes, a sensação de conquista é incomparável em qualquer outro jogo.", "data_publicacao": "2024-03-15", "total_curtidas": 47 },
+    { "id_avaliacao": 2, "id_usuario_fk": 2, "id_jogo_fk": 1, "nota": 4.5, "titulo": "Difícil mas incrivelmente recompensador", "texto": "Elden Ring é o primeiro jogo da FromSoftware que consegui terminar, e entendo por quê tantos desistem antes disso. A curva de dificuldade é acentuada, especialmente para quem não tem experiência com o estilo soulslike.\n\nO que me surpreendeu foi como o jogo é justo mesmo sendo difícil. Cada morte ensina algo. O mundo aberto ajudou bastante para quem trava em um chefe: você simplesmente vai explorar outra área, ganha experiência e volta mais forte.", "data_publicacao": "2024-04-02", "total_curtidas": 31 },
+    { "id_avaliacao": 3, "id_usuario_fk": 1, "id_jogo_fk": 2, "nota": 5.0, "titulo": "Kratos evoluiu tanto quanto Atreus — uma epopeia emocional", "texto": "God of War Ragnarök é uma das melhores sequências já feitas na história dos videogames. A jornada pelos Nove Reinos é de tirar o fôlego. Há cenas que ficam na memória muito depois dos créditos. A Santa Monica Studio demonstrou que é possível fazer um jogo de ação com a profundidade emocional de uma série de televisão de alto orçamento.", "data_publicacao": "2024-02-18", "total_curtidas": 52 },
+    { "id_avaliacao": 4, "id_usuario_fk": 3, "id_jogo_fk": 2, "nota": 4.5, "titulo": "Emocionante do início ao fim", "texto": "Terminei God of War Ragnarök em uma semana e não conseguia parar de pensar no jogo depois. O que mais me impressionou foi como o jogo balanceia ação épica com momentos íntimos. Ver os dois navegando por conflitos de gerações e expectativas diferentes é genuinamente tocante.", "data_publicacao": "2024-05-11", "total_curtidas": 28 },
+    { "id_avaliacao": 5, "id_usuario_fk": 1, "id_jogo_fk": 3, "nota": 5.0, "titulo": "Baldur's Gate 3 redefine o que um RPG pode ser", "texto": "Depois de 200 horas, ainda descubro coisas novas. A Larian Studios criou algo que vai ser estudado por designers de jogos por décadas. O que verdadeiramente distingue BG3 é a reatividade do mundo: cada escolha tem consequências, NPCs lembram do que você fez.", "data_publicacao": "2024-01-20", "total_curtidas": 63 },
+    { "id_avaliacao": 6, "id_usuario_fk": 2, "id_jogo_fk": 4, "nota": 4.0, "titulo": "Depois dos patches, Night City finalmente merece ser explorada", "texto": "Comprei Cyberpunk 2077 no lançamento e foi uma experiência frustrante. Voltei ao jogo dois anos depois com a atualização 2.0 e é quase outro jogo. O sistema de builds foi completamente reestruturado. Night City é inegavelmente uma das cidades mais impressionantes já construídas em um jogo.", "data_publicacao": "2024-06-08", "total_curtidas": 39 },
+    { "id_avaliacao": 7, "id_usuario_fk": 3, "id_jogo_fk": 5, "nota": 4.5, "titulo": "Arte, gameplay e trilha sonora em perfeita harmonia", "texto": "Hollow Knight me surpreendeu de todas as formas possíveis. Um jogo indie feito por três pessoas que compete de igual para igual com produções de grandes estúdios. O art direction é impecável e a trilha sonora de Christopher Larkin é uma das melhores que já ouvi em qualquer jogo.", "data_publicacao": "2024-07-14", "total_curtidas": 44 },
+    { "id_avaliacao": 8, "id_usuario_fk": 1, "id_jogo_fk": 6, "nota": 5.0, "titulo": "A melhor narrativa já contada em um videogame", "texto": "Red Dead Redemption 2 é um dos poucos jogos que me fez parar completamente para absorver o que estava acontecendo na tela. Arthur Morgan é um dos personagens mais bem escritos em toda a história dos videogames. Sua jornada — de cumplicidade à redenção — é executada com nuances raras em qualquer forma de mídia.", "data_publicacao": "2024-03-28", "total_curtidas": 71 },
+    { "id_avaliacao": 9, "id_usuario_fk": 2, "id_jogo_fk": 7, "nota": 4.5, "titulo": "O roguelike que redefiniu como o gênero conta histórias", "texto": "Hades resolveu o maior problema dos roguelikes: como criar uma narrativa coesa quando o jogador morre centenas de vezes. A solução da Supergiant é brilhante: cada tentativa de fuga de Zagreus avança a história. A morte não é punição, é progressão narrativa.", "data_publicacao": "2024-08-03", "total_curtidas": 35 },
+    { "id_avaliacao": 10, "id_usuario_fk": 3, "id_jogo_fk": 8, "nota": 4.5, "titulo": "O RPG mais completo que já joguei", "texto": "Joguei The Witcher 3 pela primeira vez em 2023 e entendo por que continua sendo referência. Não existem missões genéricas aqui — cada contrato tem seu próprio arco narrativo. Hearts of Stone e Blood and Wine são os melhores DLCs que joguei.", "data_publicacao": "2024-09-17", "total_curtidas": 58 }
+  ],
+  "comments": [
+    { "id_comentario": 1, "id_avaliacao_fk": 1, "id_usuario_fk": 2, "texto": "Concordo completamente! O Radahn foi o chefe que mais me marcou.", "data_comentario": "2024-03-16" },
+    { "id_comentario": 2, "id_avaliacao_fk": 1, "id_usuario_fk": 3, "texto": "Ainda estou tentando terminar... já morri no Margit umas 40 vezes kkk", "data_comentario": "2024-03-18" },
+    { "id_comentario": 3, "id_avaliacao_fk": 3, "id_usuario_fk": 2, "texto": "A cena do barco... não consigo pensar nisso sem sentir um frio na barriga.", "data_comentario": "2024-02-20" },
+    { "id_comentario": 4, "id_avaliacao_fk": 5, "id_usuario_fk": 2, "texto": "Karlach é a personagem mais amada que já vi em qualquer RPG. Ponto final.", "data_comentario": "2024-01-22" },
+    { "id_comentario": 5, "id_avaliacao_fk": 8, "id_usuario_fk": 2, "texto": "Reli sua análise três vezes. Perfeita. Cada palavra.", "data_comentario": "2024-03-29" }
+  ],
+  "likes": [
+    { "id_avaliacao_fk": 1, "id_usuario_fk": 2 },
+    { "id_avaliacao_fk": 1, "id_usuario_fk": 3 },
+    { "id_avaliacao_fk": 3, "id_usuario_fk": 2 },
+    { "id_avaliacao_fk": 5, "id_usuario_fk": 2 },
+    { "id_avaliacao_fk": 8, "id_usuario_fk": 2 }
+  ],
+  "favorites": [
+    { "id_usuario_fk": 1, "id_jogo_fk": 1 },
+    { "id_usuario_fk": 1, "id_jogo_fk": 5 },
+    { "id_usuario_fk": 2, "id_jogo_fk": 1 },
+    { "id_usuario_fk": 2, "id_jogo_fk": 6 },
+    { "id_usuario_fk": 3, "id_jogo_fk": 8 }
+  ],
+  "contacts": [],
+  "genres":    ["Ação","RPG","Aventura","Terror","Estratégia","Simulação","Esportes","Luta","Plataforma","Corrida","Puzzle","Tiro"],
+  "platforms": ["PC","PlayStation 5","PlayStation 4","Xbox Series X","Xbox One","Nintendo Switch","Android","iOS","PlayStation 3","Xbox 360","PlayStation 2","Wii"]
+}

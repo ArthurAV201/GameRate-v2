@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Avalie. Descubra. Domine.</title>
+  <link rel="stylesheet" href="css/shared.css"/>
+  <style>
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 48px 80px;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, var(--bg) 0%, #0a0a12 100%);
+      z-index: 0;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 680px; }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 8vw, 96px);
+      line-height: .95;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 480px; margin-bottom: 36px; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    @media (max-width: 768px) {
+      .hero { padding: 0 20px 60px; min-height: 90vh; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top-bar">
+  <a href="index.html" class="logo"><img src="assets/logo.svg" alt="GameRate"/></a>
+  <div class="search-wrap">
+    <svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Pesquisar jogos..."/>
+  </div>
+  <nav class="nav-links">
+    <a href="pages/catalogo.html">Jogos</a>
+    <a href="pages/login.html"    class="guest-only">Login</a>
+    <a href="pages/cadastro.html" class="guest-only btn-solid">Registrar</a>
+    <a href="pages/avaliacao-nova.html" class="auth-only btn-criar" style="display:none">Criar Análise</a>
+    <a href="pages/perfil.html"   class="auth-only" style="display:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span class="nav-username"></span>
+    </a>
+    <a href="#" data-action="logout" class="auth-only" style="display:none">Sair</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <h1>DESCUBRA.<br>JOGUE.<br><em>AVALIE.</em></h1>
+    <p>A plataforma definitiva para avaliações técnicas de jogos eletrônicos. Leia análises de críticos e jogadores reais.</p>
+    <div class="hero-cta">
+      <a href="pages/catalogo.html" class="btn btn-accent">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Explorar Jogos
+      </a>
+      <a href="pages/cadastro.html" class="btn btn-ghost guest-only">Criar Conta Grátis</a>
+    </div>
+  </div>
+</section>
+
+<section class="section page-wrap" style="margin-top: 40px;">
+  <div class="section-header">
+    <div>
+      <div class="section-title">LANÇAMENTOS <span>NOTÁVEIS</span></div>
+      <div class="section-sub">Os títulos mais recentes catalogados</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="pages/catalogo.html" class="see-all">Ver todos →</a>
+    </div>
+  </div>
+  <div class="scroll-row" id="rowLancamentos">
+    <div class="empty-state" style="width:100%"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="section-header">
+    <div>
+      <div class="section-title">MAIS BEM <span>AVALIADOS</span></div>
+      <div class="section-sub">Baseado na média das avaliações da comunidade</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="pages/catalogo.html" class="see-all">Ver todos →</a>
+    </div>
+  </div>
+  <div class="scroll-row" id="rowMelhores">
+    <div class="empty-state" style="width:100%"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="section-header">
+    <div>
+      <div class="section-title">ANÁLISES EM <span>DESTAQUE</span></div>
+      <div class="section-sub">As análises mais curtidas da semana</div>
+    </div>
+    <a href="pages/catalogo.html" class="see-all">Ver todas →</a>
+  </div>
+  <div class="reviews-grid" id="reviewsGrid">
+    <div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="section-header">
+    <div><div class="section-title">EXPLORAR POR <span>GÊNERO</span></div></div>
+  </div>
+  <div class="genres-grid" id="genresGrid"></div>
+</section>
+
+<footer class="footer">
+  <a href="index.html" class="footer-logo"><img src="assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links">
+    <a href="pages/contato.html">Contato</a>
+  </div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                                   from './js/api.js';
+  import { setupNav, logout, onDelegated,
+           gameCardHTML, reviewCardHTML, toast }    from './js/ui.js';
+
+  setupNav();
+  onDelegated('logout',      (el, e) => { e.preventDefault(); logout(); });
+  onDelegated('open-game',   (el)    => { location.href = `pages/jogo.html?id=${el.dataset.id}`; });
+  onDelegated('open-review', (el)    => { location.href = `pages/avaliacao.html?id=${el.dataset.id}`; });
+
+  document.getElementById('searchInput').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') location.href = `pages/catalogo.html?search=${e.target.value}`;
+  });
+
+  async function loadStats() {
+    const s = await api.get('/jogos/stats');
+    document.getElementById('sJogos').textContent  = s.total_jogos;
+    document.getElementById('sAval').textContent   = s.total_aval;
+    document.getElementById('sUsers').textContent  = s.total_usuarios;
+    document.getElementById('sPlat').textContent   = s.total_plat;
+  }
+
+  async function loadDestaques() {
+    const d = await api.get('/jogos/destaques');
+    document.getElementById('rowLancamentos').innerHTML = d.lancamentos.length
+      ? d.lancamentos.map(g => gameCardHTML(g)).join('')
+      : '<div class="empty-state" style="width:100%"><p>Nenhum jogo ainda.</p></div>';
+
+    document.getElementById('rowMelhores').innerHTML = d.melhores.length
+      ? d.melhores.map(g => gameCardHTML(g)).join('')
+      : '<div class="empty-state" style="width:100%"><p>Nenhum jogo avaliado ainda.</p></div>';
+  }
+
+  async function loadReviews() {
+    const revs = await api.get('/avaliacoes/destaque');
+    document.getElementById('reviewsGrid').innerHTML = revs.length
+      ? revs.map((r, i) => reviewCardHTML(r, i)).join('')
+      : '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">💬</div><p>Nenhuma avaliação ainda.</p></div>';
+  }
+
+  async function loadGenres() {
+    const gs = await api.get('/generos');
+    document.getElementById('genresGrid').innerHTML = gs.map(g =>
+      `<a href="pages/catalogo.html?genero=${encodeURIComponent(g.nome_genero)}" class="genre-chip">
+         ${g.nome_genero} <span class="chip-count">${g.total_jogos}</span>
+       </a>`
+    ).join('');
+  }
+
+  await Promise.all([loadStats(), loadDestaques(), loadReviews(), loadGenres()]);
+</script>
+</body>
+</html>

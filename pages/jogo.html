@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Jogo</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+  <style>
+    .jogo-hero {
+      position: relative; z-index: 1;
+      padding: 40px 48px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .jogo-capa {
+      width: 220px; height: 300px;
+      border-radius: 12px; object-fit: cover;
+      background: var(--surface2);
+      display: block;
+      border: 1px solid var(--border);
+    }
+    .jogo-info { padding-top: 8px; }
+    .jogo-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .jogo-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: 1px; line-height: 1;
+      margin-bottom: 12px;
+    }
+    .jogo-dev { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .jogo-score-row {
+      display: flex; align-items: center; gap: 24px;
+      margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .jogo-nota {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px; color: var(--accent); line-height: 1;
+    }
+    .jogo-nota-sub { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .jogo-stat-num   { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--text); }
+    .jogo-stat-label { font-size: 11px; color: var(--muted); }
+    .jogo-desc { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 600px; margin-bottom: 28px; }
+    .jogo-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .aval-section { padding: 0 48px 60px; position: relative; z-index: 1; }
+    .aval-header  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .aval-list    { display: flex; flex-direction: column; gap: 16px; }
+
+    .aval-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px; cursor: pointer; }
+    .aval-card:hover { border-color: rgba(232,255,71,.2); }
+    .aval-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .aval-card-title { font-size: 15px; font-weight: 600; }
+    .aval-nota-badge { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--accent); }
+    .aval-text { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .aval-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 768px) {
+      .jogo-hero { grid-template-columns: 1fr; padding: 24px 16px; }
+      .jogo-capa { width: 100%; height: 200px; }
+      .aval-section { padding: 0 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="../index.html" class="logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="search-wrap">
+    <svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Pesquisar jogos..."/>
+  </div>
+  <nav class="nav-links">
+    <a href="./catalogo.html">Jogos</a>
+    <a href="./login.html"    class="guest-only">Login</a>
+    <a href="./cadastro.html" class="guest-only btn-solid">Registrar</a>
+    <a href="./avaliacao-nova.html" class="auth-only btn-criar" style="display:none">Criar Análise</a>
+    <a href="./perfil.html" class="auth-only" style="display:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span class="nav-username"></span>
+    </a>
+    <a href="#" data-action="logout" class="auth-only" style="display:none">Sair</a>
+  </nav>
+</header>
+
+<div class="page-wrap">
+  <div class="jogo-hero" id="jogoHero">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-icon">⏳</div><p>Carregando...</p>
+    </div>
+  </div>
+
+  <div class="aval-section">
+    <div class="aval-header">
+      <div class="section-title">AVALIAÇÕES <span id="avalCount"></span></div>
+      <button class="btn btn-accent btn-sm auth-only" id="btnAvaliar" style="display:none">
+        + Escrever avaliação
+      </button>
+    </div>
+    <div class="aval-list" id="avalList">
+      <div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-title">NOVA AVALIAÇÃO</div>
+    <div class="form-group">
+      <label>Nota (1 a 5)</label>
+      <div class="nota-slider">
+        <input type="range" id="modalNota" min="1" max="5" step="0.5" value="4"/>
+        <div class="nota-val" id="notaVal">4</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" id="modalTitulo" placeholder="Resumo da sua opinião"/>
+    </div>
+    <div class="form-group">
+      <label>Avaliação (mín. 40 caracteres)</label>
+      <textarea id="modalTexto" rows="5" placeholder="Escreva sua análise detalhada..."></textarea>
+    </div>
+    <div id="modalErr" class="form-error" style="margin-bottom:12px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-accent" id="btnEnviarAval">Publicar</button>
+      <button class="btn btn-ghost"  id="btnCancelarAval">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <a href="../index.html" class="footer-logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links"><a href="./contato.html">Contato</a></div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                          from '../js/api.js';
+  import { getUser, isLoggedIn }          from '../js/auth.js';
+  import { setupNav, logout, onDelegated,
+           fmtDate, colorFor, toast }     from '../js/ui.js';
+
+  setupNav();
+  onDelegated('logout',      (el, e) => { e.preventDefault(); logout(); });
+  onDelegated('open-review', (el)    => { location.href = `./avaliacao.html?id=${el.dataset.id}`; });
+
+  const jogoId = new URLSearchParams(location.search).get('id');
+  if (!jogoId) location.href = './catalogo.html';
+
+  document.getElementById('searchInput').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') location.href = `./catalogo.html?search=${e.target.value}`;
+  });
+
+  document.getElementById('modalNota').addEventListener('input', (e) => {
+    document.getElementById('notaVal').textContent = e.target.value;
+  });
+  document.getElementById('modalBg').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modalBg'))
+      document.getElementById('modalBg').classList.remove('open');
+  });
+  document.getElementById('btnCancelarAval').addEventListener('click', () =>
+    document.getElementById('modalBg').classList.remove('open')
+  );
+  document.getElementById('btnAvaliar').addEventListener('click', () => {
+    if (!isLoggedIn()) { location.href = `./login.html`; return; }
+    document.getElementById('modalBg').classList.add('open');
+  });
+  document.getElementById('btnEnviarAval').addEventListener('click', async () => {
+    const nota   = parseFloat(document.getElementById('modalNota').value);
+    const titulo = document.getElementById('modalTitulo').value.trim();
+    const texto  = document.getElementById('modalTexto').value.trim();
+    const errEl  = document.getElementById('modalErr');
+    errEl.textContent = '';
+    if (!titulo || !texto)  { errEl.textContent = 'Preencha todos os campos'; return; }
+    if (texto.length < 40)  { errEl.textContent = 'Texto deve ter no mínimo 40 caracteres'; return; }
+    const btn = document.getElementById('btnEnviarAval');
+    btn.textContent = 'Publicando...'; btn.disabled = true;
+    try {
+      await api.post('/avaliacoes', { id_jogo_fk: parseInt(jogoId), nota, titulo, texto });
+      document.getElementById('modalBg').classList.remove('open');
+      toast('Avaliação publicada!', 'success');
+      await Promise.all([loadJogo(), loadAvaliacoes()]);
+    } catch(e) {
+      errEl.textContent = e.message;
+      btn.textContent = 'Publicar'; btn.disabled = false;
+    }
+  });
+
+  async function loadJogo() {
+    const j = await api.get(`/jogos/${jogoId}`);
+    document.title = `GameRate — ${j.nome_jogo}`;
+
+    const nota    = j.nota_media ? parseFloat(j.nota_media).toFixed(1) : '—';
+    const generos = j.generos.map(g => `<span class="tag tag-accent">${g.nome_genero}</span>`).join('');
+    const plats   = j.plataformas.map(p => `<span class="tag">${p.nome_plataforma}</span>`).join('');
+    const dataFmt = new Date(j.data_lancamento).toLocaleDateString('pt-BR', {year:'numeric', month:'long'});
+
+    document.getElementById('jogoHero').innerHTML = `
+      ${j.capa
+        ? `<img class="jogo-capa" src="${j.capa}" alt="${j.nome_jogo}">`
+        : `<div class="jogo-capa" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px">Sem capa</div>`}
+      <div class="jogo-info">
+        <div class="jogo-tags">${generos}${plats}</div>
+        <h1 class="jogo-title">${j.nome_jogo}</h1>
+        <div class="jogo-dev">${j.desenvolvedora} · ${dataFmt}</div>
+        <div class="jogo-score-row">
+          <div>
+            <div class="jogo-nota">${nota}</div>
+            <div class="jogo-nota-sub">Nota média / 5</div>
+          </div>
+          <div style="text-align:center">
+            <div class="jogo-stat-num">${j.total_avaliacoes || 0}</div>
+            <div class="jogo-stat-label">Avaliações</div>
+          </div>
+        </div>
+        <p class="jogo-desc">${j.descricao}</p>
+        <div class="jogo-actions">
+          <a href="./catalogo.html" class="btn btn-ghost">← Catálogo</a>
+        </div>
+      </div>`;
+
+    const user = getUser();
+    document.querySelectorAll('.auth-only').forEach(el =>
+      el.style.display = user ? 'inline-flex' : 'none'
+    );
+  }
+
+  async function loadAvaliacoes() {
+    const data = await api.get(`/avaliacoes?jogo_id=${jogoId}&limit=20`);
+    document.getElementById('avalCount').textContent = `(${data.total})`;
+
+    if (!data.avaliacoes.length) {
+      document.getElementById('avalList').innerHTML =
+        '<div class="empty-state"><div class="empty-icon">💬</div><p>Sem avaliações ainda. Seja o primeiro!</p></div>';
+      return;
+    }
+
+    const COLORS = ['#FFED65','#ff4f4f','#47c5ff','#ff9f47','#a78bfa','#34d399'];
+    document.getElementById('avalList').innerHTML = data.avaliacoes.map((a, i) => {
+      const col = COLORS[i % COLORS.length];
+      return `
+        <div class="aval-card" data-id="${a.id_avaliacao}" data-action="open-review">
+          <div class="aval-card-top">
+            <div>
+              <div class="aval-card-title">${a.titulo}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                <div style="width:24px;height:24px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--bg)">${a.nome_usuario.slice(0,2).toUpperCase()}</div>
+                <span style="font-size:12px;color:var(--muted)">@${a.nome_usuario} · ${fmtDate(a.data_publicacao)}</span>
+              </div>
+            </div>
+            <div class="aval-nota-badge">${a.nota}</div>
+          </div>
+          <div class="aval-text">${a.texto}</div>
+          <div class="aval-footer">
+            <div style="display:flex;gap:16px">
+              <span>♥ ${a.total_curtidas} curtidas</span>
+              <span>💬 ${a.total_comentarios} comentários</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  await Promise.all([loadJogo(), loadAvaliacoes()]);
+</script>
+</body>
+</html>

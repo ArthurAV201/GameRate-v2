@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Login</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+</head>
+<body class="auth-page">
+
+<div class="auth-box">
+  <div class="auth-logo">
+    <a href="../index.html"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-card-title">ENTRAR</div>
+
+    <div class="demo-hint">
+      <strong>Contas demo:</strong>
+      admin@gamerate.com / admin123<br>
+      critico@gamerate.com / senha123<br>
+      gamer@gamerate.com / senha123
+    </div>
+
+    <div class="form-group">
+      <label>E-mail ou Usuário</label>
+      <input type="text" id="loginField" placeholder="seu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="senha" placeholder="••••••••"/>
+    </div>
+    <div id="errMsg" class="form-error" style="margin-bottom:12px"></div>
+    <button class="btn btn-accent btn-full" id="btnLogin">Entrar</button>
+    <div class="divider">ou</div>
+    <a href="./cadastro.html" class="btn btn-ghost btn-full">Criar conta grátis</a>
+  </div>
+
+  <div class="auth-footer">
+    <a href="../index.html">← Voltar para a home</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <a href="../index.html" class="footer-logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div class="footer-links"><a href="./contato.html">Contato</a></div>
+  <div class="footer-copy">© 2025 GameRate</div>
+</footer>
+
+<script type="module">
+  import { api }                     from '../js/api.js';
+  import { saveSession, isLoggedIn } from '../js/auth.js';
+
+  if (isLoggedIn()) location.href = '../index.html';
+
+  const errEl = document.getElementById('errMsg');
+  const btnEl = document.getElementById('btnLogin');
+
+  async function handleLogin() {
+    const loginField = document.getElementById('loginField').value.trim();
+    const senha      = document.getElementById('senha').value;
+    errEl.textContent = '';
+    if (!loginField || !senha) { errEl.textContent = 'Preencha todos os campos'; return; }
+
+    btnEl.textContent = 'Entrando...'; btnEl.disabled = true;
+    try {
+      const data = await api.post('/auth/login', { email: loginField, senha });
+      saveSession(data.token, data.nome, data.perfil, data.id);
+      const dest = new URLSearchParams(location.search).get('next') || '../index.html';
+      location.href = dest;
+    } catch(e) {
+      errEl.textContent = e.message;
+      btnEl.textContent = 'Entrar'; btnEl.disabled = false;
+    }
+  }
+
+  btnEl.addEventListener('click', handleLogin);
+  document.getElementById('senha').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>

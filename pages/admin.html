@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GameRate — Admin</title>
+  <link rel="stylesheet" href="../css/shared.css"/>
+  <style>
+    .admin-layout { display: grid; grid-template-columns: 180px 1fr; min-height: calc(100vh - 60px); }
+    .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 20px 12px; }
+    .sidebar-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; padding: 0 8px; margin-bottom: 8px; }
+    .main { padding: 28px; }
+    .panel-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .stat-num   { font-size: 32px; font-weight: 700; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .table-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .table-head-title { font-size: 15px; font-weight: 700; }
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-jogador { background: rgba(77,166,255,.15); color: var(--jogador); }
+    .badge-critico { background: rgba(255,107,107,.15); color: var(--critico); }
+    .badge-admin   { background: rgba(255,215,0,.15);   color: var(--admin); }
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+    .modal-bg.open { display: flex; }
+    @media (max-width: 768px) { .admin-layout { grid-template-columns: 1fr; } .sidebar { display: flex; flex-wrap: wrap; gap: 4px; border-right: none; border-bottom: 1px solid var(--border); } .sidebar-label { display: none; } }
+  </style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="../index.html" class="logo"><img src="../assets/logo.svg" alt="GameRate"/></a>
+  <div style="flex:1"></div>
+  <nav class="nav-links">
+    <a href="./catalogo.html">Jogos</a>
+    <a href="./perfil.html" class="auth-only" style="display:none"><span class="nav-username"></span></a>
+    <a href="#" data-action="logout" class="auth-only" style="display:none">Sair</a>
+  </nav>
+</header>
+
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-label">Painel</div>
+    <button class="sidebar-link active" data-section="dashboard">📊 Dashboard</button>
+    <button class="sidebar-link" data-section="jogos">🎮 Jogos</button>
+    <button class="sidebar-link" data-section="usuarios">👥 Usuários</button>
+    <button class="sidebar-link" data-section="avaliacoes">⭐ Avaliações</button>
+    <button class="sidebar-link" data-section="contatos">✉️ Contatos</button>
+  </aside>
+
+  <main class="main">
+    <div id="sec-dashboard">
+      <div class="panel-title">Dashboard</div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card" style="opacity:.4"><div class="stat-num">—</div><div class="stat-label">Jogos</div></div>
+        <div class="stat-card" style="opacity:.4"><div class="stat-num">—</div><div class="stat-label">Avaliações</div></div>
+        <div class="stat-card" style="opacity:.4"><div class="stat-num">—</div><div class="stat-label">Usuários</div></div>
+      </div>
+    </div>
+
+    <div id="sec-jogos" style="display:none">
+      <div class="table-wrap">
+        <div class="table-head">
+          <div class="table-head-title">Jogos</div>
+          <button class="btn btn-primary btn-sm" id="btnNovoJogo">+ Novo jogo</button>
+        </div>
+        <table class="data-table"><thead><tr><th>Nome</th><th>Desenvolvedora</th><th>Ano</th><th>Nota</th><th>Aval.</th><th></th></tr></thead>
+        <tbody id="tbJogos"></tbody></table>
+      </div>
+    </div>
+
+    <div id="sec-usuarios" style="display:none">
+      <div class="table-wrap">
+        <div class="table-head"><div class="table-head-title">Usuários</div></div>
+        <table class="data-table"><thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Cadastro</th><th></th></tr></thead>
+        <tbody id="tbUsers"></tbody></table>
+      </div>
+    </div>
+
+    <div id="sec-avaliacoes" style="display:none">
+      <div class="table-wrap">
+        <div class="table-head"><div class="table-head-title">Avaliações</div></div>
+        <table class="data-table"><thead><tr><th>Título</th><th>Jogo</th><th>Usuário</th><th>Nota</th><th>Data</th><th></th></tr></thead>
+        <tbody id="tbAvals"></tbody></table>
+      </div>
+    </div>
+
+    <div id="sec-contatos" style="display:none">
+      <div class="table-wrap">
+        <div class="table-head"><div class="table-head-title">Mensagens de Contato</div></div>
+        <table class="data-table"><thead><tr><th>E-mail</th><th>Tipo</th><th>Mensagem</th><th>Data</th></tr></thead>
+        <tbody id="tbContatos"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-bg" id="modalJogo">
+  <div class="modal">
+    <div class="modal-title">Novo Jogo</div>
+    <div class="form-group"><label>Nome *</label><input type="text" id="jNome"/></div>
+    <div class="form-group"><label>Desenvolvedora *</label><input type="text" id="jDev"/></div>
+    <div class="form-group"><label>Data de lançamento *</label><input type="date" id="jData"/></div>
+    <div class="form-group"><label>Descrição *</label><textarea id="jDesc" rows="3"></textarea></div>
+    <div class="form-group"><label>URL da capa</label><input type="text" id="jCapa" placeholder="https://..."/></div>
+    <div id="jogoErr" class="form-error" style="margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" id="btnSalvarJogo">Cadastrar</button>
+      <button class="btn btn-ghost"   id="btnCancelarJogo">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { api }                           from '../js/api.js';
+  import { getUser }                       from '../js/auth.js';
+  import { setupNav, logout, onDelegated, fmtDate, toast } from '../js/ui.js';
+
+  setupNav();
+  const user = getUser();
+  if (!user || user.perfil !== 'Administrador') { alert('Acesso restrito.'); location.href = '../index.html'; }
+  onDelegated('logout', (el, e) => { e.preventDefault(); logout(); });
+
+  const loaded = {};
+
+  document.getElementById('sidebar').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-section]');
+    if (!btn) return;
+    document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['dashboard','jogos','usuarios','avaliacoes','contatos'].forEach(s =>
+      document.getElementById(`sec-${s}`).style.display = s === btn.dataset.section ? '' : 'none'
+    );
+    loaders[btn.dataset.section]?.();
+  });
+
+  const loaders = {
+    dashboard:  loadDash,
+    jogos:      loadJogos,
+    usuarios:   loadUsuarios,
+    avaliacoes: loadAvals,
+    contatos:   loadContatos
+  };
+
+  async function loadDash() {
+    if (loaded.dashboard) return; loaded.dashboard = true;
+    const s = await api.get('/jogos/stats');
+    document.getElementById('statsGrid').innerHTML = [
+      { num: s.total_jogos,    label: 'Jogos' },
+      { num: s.total_aval,     label: 'Avaliações' },
+      { num: s.total_usuarios, label: 'Usuários' }
+    ].map(i => `<div class="stat-card"><div class="stat-num">${i.num}</div><div class="stat-label">${i.label}</div></div>`).join('');
+  }
+
+  async function loadJogos() {
+    if (loaded.jogos) return; loaded.jogos = true;
+    const { jogos } = await api.get('/jogos?limit=100');
+    document.getElementById('tbJogos').innerHTML = jogos.map(j => `
+      <tr>
+        <td>${j.nome_jogo}</td>
+        <td style="color:var(--muted)">${j.desenvolvedora}</td>
+        <td style="color:var(--muted)">${new Date(j.data_lancamento).getFullYear()}</td>
+        <td>${j.nota_media || '—'}</td>
+        <td>${j.total_avaliacoes}</td>
+        <td><button class="btn btn-danger btn-sm" data-action="del-jogo" data-id="${j.id_jogo}" data-nome="${j.nome_jogo}">Excluir</button></td>
+      </tr>`).join('');
+  }
+
+  async function loadUsuarios() {
+    if (loaded.usuarios) return; loaded.usuarios = true;
+    const perfis = { 'Jogador':'badge-jogador','Crítico Especializado':'badge-critico','Administrador':'badge-admin' };
+    const users  = await api.get('/usuarios');
+    document.getElementById('tbUsers').innerHTML = users.map(u => `
+      <tr>
+        <td>${u.nome_usuario}</td>
+        <td style="color:var(--muted)">${u.email}</td>
+        <td><span class="badge ${perfis[u.nome_perfil]||'badge-jogador'}">${u.nome_perfil}</span></td>
+        <td style="color:var(--muted)">${fmtDate(u.data_criacao)}</td>
+        <td><button class="btn btn-danger btn-sm" data-action="del-user" data-id="${u.id_usuario}" data-nome="${u.nome_usuario}">Excluir</button></td>
+      </tr>`).join('');
+  }
+
+  async function loadAvals() {
+    if (loaded.avaliacoes) return; loaded.avaliacoes = true;
+    const { avaliacoes } = await api.get('/avaliacoes?limit=50');
+    document.getElementById('tbAvals').innerHTML = avaliacoes.map(a => `
+      <tr>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.titulo}</td>
+        <td style="color:var(--muted)">${a.nome_jogo}</td>
+        <td style="color:var(--muted)">@${a.nome_usuario}</td>
+        <td>${a.nota}</td>
+        <td style="color:var(--muted)">${fmtDate(a.data_publicacao)}</td>
+        <td><button class="btn btn-danger btn-sm" data-action="del-aval" data-id="${a.id_avaliacao}">Excluir</button></td>
+      </tr>`).join('');
+  }
+
+  async function loadContatos() {
+    if (loaded.contatos) return; loaded.contatos = true;
+    const rows = await api.get('/contato');
+    document.getElementById('tbContatos').innerHTML = rows.length
+      ? rows.map(c => `<tr>
+          <td>${c.email_contato}</td>
+          <td><span class="badge badge-jogador">${c.tipo}</span></td>
+          <td style="color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.mensagem}</td>
+          <td style="color:var(--muted)">${fmtDate(c.data_comunicacao)}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">Nenhuma mensagem.</td></tr>';
+  }
+
+  document.getElementById('btnNovoJogo').addEventListener('click', () => {
+    document.getElementById('modalJogo').classList.add('open');
+  });
+  document.getElementById('modalJogo').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modalJogo'))
+      document.getElementById('modalJogo').classList.remove('open');
+  });
+  document.getElementById('btnCancelarJogo').addEventListener('click', () =>
+    document.getElementById('modalJogo').classList.remove('open')
+  );
+  document.getElementById('btnSalvarJogo').addEventListener('click', async () => {
+    const nome_jogo       = document.getElementById('jNome').value.trim();
+    const desenvolvedora  = document.getElementById('jDev').value.trim();
+    const data_lancamento = document.getElementById('jData').value;
+    const descricao       = document.getElementById('jDesc').value.trim();
+    const capa            = document.getElementById('jCapa').value.trim();
+    const errEl           = document.getElementById('jogoErr');
+    errEl.textContent = '';
+    if (!nome_jogo || !desenvolvedora || !data_lancamento || !descricao)
+      { errEl.textContent = 'Preencha os campos obrigatórios'; return; }
+    const btn = document.getElementById('btnSalvarJogo');
+    btn.textContent = 'Salvando...'; btn.disabled = true;
+    try {
+      await api.post('/jogos', { nome_jogo, desenvolvedora, data_lancamento, descricao, capa: capa||null });
+      document.getElementById('modalJogo').classList.remove('open');
+      toast('Jogo cadastrado!', 'success');
+      loaded.jogos = false; loadJogos();
+    } catch(e) {
+      errEl.textContent = e.message;
+    } finally { btn.textContent = 'Cadastrar'; btn.disabled = false; }
+  });
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const { action, id, nome } = btn.dataset;
+    if (action === 'del-jogo') {
+      if (!confirm(`Excluir "${nome}"?`)) return;
+      await api.delete(`/jogos/${id}`); toast('Jogo excluído','success');
+      loaded.jogos = false; loadJogos();
+    }
+    if (action === 'del-user') {
+      if (!confirm(`Excluir "${nome}"?`)) return;
+      await api.delete(`/usuarios/${id}`); toast('Usuário excluído','success');
+      loaded.usuarios = false; loadUsuarios();
+    }
+    if (action === 'del-aval') {
+      if (!confirm('Excluir esta avaliação?')) return;
+      await api.delete(`/avaliacoes/${id}`); toast('Avaliação excluída','success');
+      loaded.avaliacoes = false; loadAvals();
+    }
+  });
+
+  loadDash();
+</script>
+</body>
+</html>
