@@ -40,6 +40,15 @@ export function logout() {
   window.location.href = inPages ? '../pages/login.html' : 'pages/login.html';
 }
 
+export function getBasePath() {
+  const pathParts = location.pathname.split('/').filter(p => p);
+  if (pathParts.length > 0 && pathParts[0] === 'gamerate') {
+    return '/gamerate/';
+  } else {
+    return location.pathname.includes('/pages/') ? '../' : './';
+  }
+}
+
 export function toast(msg, tipo = 'info') {
   const t = document.createElement('div');
   t.className   = `toast toast-${tipo}`;
@@ -73,10 +82,11 @@ export function footerHTML(basePath = '') {
     </footer>`;
 }
 
-export function gameCardHTML(game) {
+export function gameCardHTML(game, basePath = '') {
   const nota   = game.nota_media ? parseFloat(game.nota_media).toFixed(1) : '—';
-  const imgTag = game.capa
-    ? `<img src="${game.capa}" alt="${game.nome_jogo}" loading="lazy" onerror="this.style.display='none'">`
+  const imgSrc = game.capa.startsWith('http') ? game.capa : basePath + game.capa.replace('./', '');
+  const imgTag = imgSrc
+    ? `<img src="${imgSrc}" alt="${game.nome_jogo}" loading="lazy" onerror="this.style.display='none'">`
     : '';
 
   return `
@@ -90,15 +100,16 @@ export function gameCardHTML(game) {
     </div>`;
 }
 
-export function reviewCardHTML(review, index) {
+export function reviewCardHTML(review, index, basePath = '') {
   const pct = review.nota ? (parseFloat(review.nota) / 5 * 100).toFixed(0) : 0;
   const col = colorFor(review.nome_usuario || '');
+  const imgSrc = review.capa ? (review.capa.startsWith('http') ? review.capa : basePath + review.capa.replace('./', '')) : '';
 
   return `
     <div class="review-card" data-id="${review.id_avaliacao}" data-action="open-review">
       <div class="review-game-row">
         <img class="review-game-img"
-             src="${review.capa || ''}" alt="${review.nome_jogo || ''}"
+             src="${imgSrc}" alt="${review.nome_jogo || ''}"
              onerror="this.style.background='var(--surface2)';this.src=''">
         <div style="flex:1;min-width:0">
           <div style="font-size:15px;font-weight:600">${review.nome_jogo || ''}</div>

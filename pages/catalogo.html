@@ -152,7 +152,7 @@
 
 <script type="module">
   import { api }                           from '../js/api.js';
-  import { setupNav, logout, onDelegated } from '../js/ui.js';
+  import { setupNav, logout, onDelegated, getBasePath } from '../js/ui.js';
 
   setupNav();
   onDelegated('logout',    (el, e) => { e.preventDefault(); logout(); });
@@ -207,9 +207,11 @@
     if (!data.jogos.length) {
       grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🎮</div><p>Nenhum jogo encontrado.</p></div>';
     } else {
+      const basePath = getBasePath();
       grid.innerHTML = data.jogos.map(g => {
         const nota = g.nota_media ? parseFloat(g.nota_media).toFixed(1) : '—';
-        const img  = g.capa ? `<img class="game-card-grid-img" src="${g.capa}" alt="${g.nome_jogo}" loading="lazy" onerror="this.style.background='var(--surface2)';this.style.display='none'">` : `<div class="game-card-grid-img"></div>`;
+        const imgSrc = g.capa.startsWith('http') ? g.capa : basePath + g.capa.replace('./', '');
+        const img  = imgSrc ? `<img class="game-card-grid-img" src="${imgSrc}" alt="${g.nome_jogo}" loading="lazy" onerror="this.style.background='var(--surface2)';this.style.display='none'">` : `<div class="game-card-grid-img"></div>`;
         return `
           <div class="game-card-grid" data-id="${g.id_jogo}" data-action="open-game">
             ${img}

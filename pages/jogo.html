@@ -144,7 +144,7 @@
   import { api }                          from '../js/api.js';
   import { getUser, isLoggedIn }          from '../js/auth.js';
   import { setupNav, logout, onDelegated,
-           fmtDate, colorFor, toast }     from '../js/ui.js';
+           fmtDate, colorFor, toast, getBasePath }     from '../js/ui.js';
 
   setupNav();
   onDelegated('logout',      (el, e) => { e.preventDefault(); logout(); });
@@ -200,10 +200,11 @@
     const generos = j.generos.map(g => `<span class="tag tag-accent">${g.nome_genero}</span>`).join('');
     const plats   = j.plataformas.map(p => `<span class="tag">${p.nome_plataforma}</span>`).join('');
     const dataFmt = new Date(j.data_lancamento).toLocaleDateString('pt-BR', {year:'numeric', month:'long'});
+    const basePath = getBasePath();
 
     document.getElementById('jogoHero').innerHTML = `
       ${j.capa
-        ? `<img class="jogo-capa" src="${j.capa}" alt="${j.nome_jogo}">`
+        ? `<img class="jogo-capa" src="${j.capa.startsWith('http') ? j.capa : basePath + j.capa.replace('./', '')}" alt="${j.nome_jogo}">`
         : `<div class="jogo-capa" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px">Sem capa</div>`}
       <div class="jogo-info">
         <div class="jogo-tags">${generos}${plats}</div>

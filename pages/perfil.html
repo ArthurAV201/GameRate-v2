@@ -141,7 +141,7 @@
   import { api }                            from '../js/api.js';
   import { getUser, getToken, saveSession,
            isLoggedIn }                     from '../js/auth.js';
-  import { setupNav, logout, onDelegated, ROLE_CLASS, starHTML, fmtDate, toast } from '../js/ui.js';
+  import { setupNav, logout, onDelegated, ROLE_CLASS, starHTML, fmtDate, toast, getBasePath } from '../js/ui.js';
 
   setupNav();
   if (!isLoggedIn()) location.href = './login.html?next=./perfil.html';
@@ -231,9 +231,10 @@
         '<div class="empty-state"><p>Você ainda não fez nenhuma avaliação.</p></div>';
       return;
     }
+    const basePath = getBasePath();
     document.getElementById('myReviews').innerHTML = rows.map(a => `
       <div class="my-review-item">
-        <img class="my-review-cover" src="${a.capa || ''}" alt="${a.nome_jogo}"
+        <img class="my-review-cover" src="${a.capa ? (a.capa.startsWith('http') ? a.capa : basePath + a.capa.replace('./', '')) : ''}" alt="${a.nome_jogo}"
              onerror="this.style.background='var(--surface2)';this.removeAttribute('src')">
         <div class="my-review-body">
           <div class="my-review-game">${a.nome_jogo}</div>
