@@ -8,7 +8,7 @@
       "descricao": "Um RPG de ação ambientado nas Terras Intermédias, criado em colaboração com George R.R. Martin. Explore um vasto mundo aberto repleto de masmorras, chefes e segredos.",
       "nota_media": 4.8,
       "total_avaliacoes": 2,
-      "capa": "../assets/eldenring.jpg",
+      "capa": "./assets/eldenring.jpg",
       "generos": ["Ação", "RPG"],
       "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
     },
@@ -20,7 +20,7 @@
       "descricao": "Kratos e Atreus embarcam em uma épica jornada pelos reinos nórdicos enquanto o Ragnarök se aproxima. Uma sequência que supera o original em emoção e escala.",
       "nota_media": 4.8,
       "total_avaliacoes": 2,
-      "capa": "../assets/gowragnarok.jpg",
+      "capa": "./assets/gowragnarok.jpg",
       "generos": ["Ação", "Aventura"],
       "plataformas": ["PC", "PlayStation 5", "PlayStation 4"]
     },
@@ -32,7 +32,7 @@
       "descricao": "O mais completo RPG de mesa digital já criado. Com roteiro ramificado, personagens profundos e combate tático, define um novo padrão para o gênero.",
       "nota_media": 5.0,
       "total_avaliacoes": 1,
-      "capa": "../assets/baldursgate3.jpg",
+      "capa": "./assets/baldursgate3.jpg",
       "generos": ["RPG", "Aventura"],
       "plataformas": ["PC", "PlayStation 5"]
     },
@@ -44,7 +44,7 @@
       "descricao": "Uma epopeia cyberpunk em Night City, uma megalópole obcecada por poder e modificações corporais. Jogue como V em uma história de redenção e identidade.",
       "nota_media": 4.0,
       "total_avaliacoes": 1,
-      "capa": "../assets/cyberpunk2077.jpg",
+      "capa": "./assets/cyberpunk2077.jpg",
       "generos": ["RPG", "Ação"],
       "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
     },
@@ -56,7 +56,7 @@
       "descricao": "Um metroidvania desafiador e belíssimo ambientado em Hallownest, um reino subterrâneo de insetos. Arte manual, trilha sonora magistral e gameplay impecável.",
       "nota_media": 4.7,
       "total_avaliacoes": 1,
-      "capa": "../assets/hollowknight.jpg",
+      "capa": "./assets/hollowknight.jpg",
       "generos": ["Ação", "Aventura"],
       "plataformas": ["PC", "Nintendo Switch"]
     },
@@ -68,7 +68,7 @@
       "descricao": "Uma obra-prima ambientada no Velho Oeste americano. Arthur Morgan e o bando Van der Linde enfrentam o fim de uma era em uma das histórias mais emocionantes dos jogos.",
       "nota_media": 5.0,
       "total_avaliacoes": 1,
-      "capa": "../assets/reddeadredemption2.jpg",
+      "capa": "./assets/reddeadredemption2.jpg",
       "generos": ["Aventura", "Ação"],
       "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One"]
     },
@@ -80,7 +80,7 @@
       "descricao": "Um roguelike de ação sobre Zagreus, filho de Hades, tentando escapar do submundo grego. Narrativa integrada ao gameplay de forma nunca vista no gênero.",
       "nota_media": 4.5,
       "total_avaliacoes": 1,
-      "capa": "../assets/hades.jpg",
+      "capa": "./assets/hades.jpg",
       "generos": ["Ação", "RPG"],
       "plataformas": ["PC", "PlayStation 5", "Nintendo Switch"]
     },
@@ -92,7 +92,7 @@
       "descricao": "Geralt de Rívia em sua aventura mais épica, buscando sua filha adotiva Ciri. Um dos maiores RPGs de mundo aberto já criados, com quests memoráveis.",
       "nota_media": 4.9,
       "total_avaliacoes": 1,
-      "capa": "../assets/thewitcher3.jpg",
+      "capa": "./assets/thewitcher3.jpg",
       "generos": ["RPG", "Aventura"],
       "plataformas": ["PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One", "Nintendo Switch"]
     }
@@ -117,8 +117,8 @@
   ],
   "comments": [
     { "id_comentario": 1, "id_avaliacao_fk": 1, "id_usuario_fk": 2, "texto": "Concordo completamente! O Radahn foi o chefe que mais me marcou.", "data_comentario": "2024-03-16" },
-    { "id_comentario": 2, "id_avaliacao_fk": 1, "id_usuario_fk": 3, "texto": "Ainda estou tentando terminar... já morri no Margit umas 40 vezes kkk", "data_comentario": "2024-03-18" },
-    { "id_comentario": 3, "id_avaliacao_fk": 3, "id_usuario_fk": 2, "texto": "A cena do barco... não consigo pensar nisso sem sentir um frio na barriga.", "data_comentario": "2024-02-20" },
+    { "id_comentario": 2, "id_avaliacao_fk": 1, "id_usuario_fk": 3, "texto": "Ainda estou tentando terminar.. já morri no Margit umas 40 vezes kkk", "data_comentario": "2024-03-18" },
+    { "id_comentario": 3, "id_avaliacao_fk": 3, "id_usuario_fk": 2, "texto": "A cena do barco.. não consigo pensar nisso sem sentir um frio na barriga.", "data_comentario": "2024-02-20" },
     { "id_comentario": 4, "id_avaliacao_fk": 5, "id_usuario_fk": 2, "texto": "Karlach é a personagem mais amada que já vi em qualquer RPG. Ponto final.", "data_comentario": "2024-01-22" },
     { "id_comentario": 5, "id_avaliacao_fk": 8, "id_usuario_fk": 2, "texto": "Reli sua análise três vezes. Perfeita. Cada palavra.", "data_comentario": "2024-03-29" }
   ],
